@@ -21,7 +21,7 @@ export default function Contact() {
     const { contact } = useLoaderData() as {contact: ContactType};
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-
+        event.preventDefault();
         const result = await Swal.fire({
             title: 'Confirmation',
             text: 'Please confirm you want to delete this record.',
@@ -35,8 +35,6 @@ export default function Contact() {
             // Convertir event.target en formulaire HTML
             const form = event.target as HTMLFormElement;
             form.submit();
-        } else {
-            event.preventDefault();
         }
     };
 
@@ -66,11 +64,13 @@ export default function Contact() {
                 {contact.notes && <p>{contact.notes}</p>}
 
                 <div>
-                    <Form action="edit">
+                    <Form action="edit" method="get">
                         <button type="submit">Edit</button>
                     </Form>
                     <Form
                         action="destroy"
+
+                        method={"post"}
                     >
                         <button type="submit">Delete</button>
                     </Form>

@@ -24,7 +24,6 @@ export async function createContact(first, last) {
 export async function getContact(id) {
     await fakeNetwork(`contact:${id}`);
     let contacts = await getLocalContacts();
-    console.log(contacts, id);
     let contact = contacts.find(contact => contact.id === id);
     return contact ?? null;
 }

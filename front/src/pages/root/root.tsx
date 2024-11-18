@@ -2,6 +2,8 @@ import {Form, NavLink, Outlet, redirect, useLoaderData, useNavigation, useSubmit
 import { getContacts, createContact } from "../../back-localforage/contacts";
 import {ContactType} from "../../types/types";
 import {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../redux/store";
 
 export async function loader({request}: {request: Request}) {
     const url = new URL(request.url);
@@ -16,9 +18,11 @@ export async function action() {
 }
 
 export default function Root() {
+    const favorites = useSelector((state: RootState) => state.favorites)
     const { contacts, q } = useLoaderData() as { contacts: ContactType[], q: string };
     const navigation = useNavigation();
     const submit = useSubmit();
+    let dispatch = useDispatch();
 
     const searching =
         navigation.location &&
@@ -68,7 +72,9 @@ export default function Root() {
                 <nav>
                     {contacts.length ? (
                         <ul>
-                            {contacts.map((contact: ContactType) => (
+                            {contacts.map((contact: ContactType) => {
+                              let favorite = favorites.find(id => id === contact.id)
+                              return (
                                 <li key={contact.id}>
                                     <NavLink
                                         to={`contacts/${contact.id}`}
@@ -87,10 +93,11 @@ export default function Root() {
                                         ) : (
                                             <i>No Name</i>
                                         )}{" "}
-                                        {contact.favorite && <span>★</span>}
+                                        {favorite && <span>★</span>}
                                     </NavLink>
                                 </li>
-                            ))}
+                            )}
+                            )}
                         </ul>
                     ) : (
                         <p>
